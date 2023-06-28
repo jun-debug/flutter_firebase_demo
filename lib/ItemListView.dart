@@ -6,14 +6,20 @@ import 'package:provider/provider.dart';
 import 'model/item.dart';
 
 class ItemListView extends StatelessWidget{
-  final List<Item> items;
-  const ItemListView({super.key, required this.items});
+  List<Item> items;
+  List<int>? quantities;
+  ItemListView({super.key, required this.items, this.quantities});
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
         TextEditingController quantityController = TextEditingController();
+        if (quantities != null && items.length == quantities!.length){
+          quantityController.text = quantities![index].toString();
+        }
+        IconData iconData = quantities == null ? Icons.add : Icons.remove;
         return
           Card(
           elevation: 4.0,
@@ -45,11 +51,18 @@ class ItemListView extends StatelessWidget{
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.add),
+                      icon: Icon(iconData),
                       onPressed: () {
                         var itemId = items[index].id;
-                        int qty = int.tryParse(quantityController.text)??1;
-                        Provider.of<OrderRepository>(context, listen: false).addItem(itemId: itemId!, qty: qty);
+                        var cart = Provider.of<OrderRepository>(context, listen: false);
+                        if (iconData == Icons.add) {
+                          int qty = int.tryParse(quantityController.text) ?? 1;
+                          // Provider.of<OrderRepository>(context, listen: false)
+                          cart.addItem(item: items[index], qty: qty);
+                        }
+                        else{
+                          cart.deleteItem(item: items[index]);
+                        }
                       },
                     ),
                   ],

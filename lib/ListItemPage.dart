@@ -6,6 +6,10 @@ import 'package:provider/provider.dart';
 
 import 'model/item.dart';
 
+/* **********************************************************
+load and show all fitness equipments
+************************************************************ */
+
 class ListItemPage extends StatelessWidget {
   const ListItemPage({super.key});
   @override
@@ -37,7 +41,10 @@ class ListItemPage extends StatelessWidget {
                     semanticLabel: 'Shopping cart',
                   ),
                   onPressed: () {
-                    cart.saveOrder();
+                    if (!cart.currentOrder.items.isEmpty) {
+                      cart.saveOrder();
+                      Navigator.pushNamed(context, 'OrderItemList');
+                    }
                   },
                 ),
                 if (cart.count > 0)
@@ -67,8 +74,7 @@ class ListItemPage extends StatelessWidget {
           ],
         ),
         body: FutureBuilder<List<Item>>(
-          future: Provider.of<ItemRepository>(context, listen: true)
-              .getAllItems(),
+          future: Provider.of<ItemRepository>(context, listen: true).getAllItems(),
           builder: (context, AsyncSnapshot<List<Item>> items) {
             if (items.hasData) {
               return ItemListView(items: items.data!);

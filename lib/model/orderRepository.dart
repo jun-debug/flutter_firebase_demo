@@ -1,8 +1,8 @@
+import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_firebase_demo/model/ItemRepository.dart';
 import 'package:flutter_firebase_demo/model/cartOrder.dart';
-import 'cartOrder.dart';
 import 'item.dart';
 
 
@@ -31,19 +31,24 @@ class OrderRepository extends ChangeNotifier {
 
 
 
-  void addItem({required String itemId, required int qty}){
+  void addItem({required Item item, required int qty}){
      if (currentOrder != null){
-       currentOrder.items[itemId] = qty;
+       currentOrder.items[item] = qty;
      }
      notifyListeners();
   }
 
-  void deleteItem({required String itemId}){
-    currentOrder.items.remove(itemId);
+  // void deleteItem({required String itemId}){
+  //   currentOrder.items.remove(itemId);
+  // }
+
+  void deleteItem({required Item item}){
+    currentOrder.items.remove(item);
+    notifyListeners();
   }
 
-  void updateItemQty({required String itemId, required int qty}){
-    currentOrder.items[itemId] = qty;
+  void updateItemQty({required Item item, required int qty}){
+    currentOrder.items[item] = qty;
   }
 
   Future<Item?> getItem({required String itemId}) async {
@@ -54,6 +59,25 @@ class OrderRepository extends ChangeNotifier {
     else {
       return null;
     }
+  }
+
+  Future<Map<Item, int>> getOrderItems() async {
+    Map<Item, int> orderItems = {};
+    try {
+      if (currentOrder != null) {
+         for(var element in currentOrder.items.entries){
+          Item? item = await getItem(itemId: element.key.id!);
+          if (item != null) {
+            orderItems[item] = element.value;
+          }
+        }
+      }
+    }
+    catch (e) {
+      print("$e");
+    }
+    notifyListeners();
+    return orderItems;
   }
 
   Future<CartOrder> getOrder(String? orderId) async {
@@ -71,7 +95,7 @@ class OrderRepository extends ChangeNotifier {
 
   void saveOrder() async {
     try {
-      db = FirebaseFirestore.instance;
+      db ??= FirebaseFirestore.instance;
       String orderId = currentOrder.id ??
           db.collection(DocumentName)
           .doc()

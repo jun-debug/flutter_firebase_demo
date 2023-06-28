@@ -1,9 +1,9 @@
-import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_firebase_demo/ListItemPage.dart';
 import 'package:flutter_firebase_demo/NavBar.dart';
+import 'package:flutter_firebase_demo/OrderItemView.dart';
 import 'package:flutter_firebase_demo/RegisterPage.dart';
 import 'package:flutter_firebase_demo/firebase_options.dart';
 import 'package:flutter_firebase_demo/model/ItemRepository.dart';
@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
               'Home': (context) => const MyHomePage(title: "Hello world"),
               'Register': (context) => const RegisterPage(),
               'ListItem': (context) => const ListItemPage(),
+              'OrderItemList': (context) => const OrderItemView(),
             },
             home: const MyHomePage(title: 'Flutter Demo Home Page'),
           )
@@ -141,11 +142,11 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             TextButton(
                 onPressed: () {
-                  // ItemRepository().writeData();
-                  // Provider.of<ItemRepository>(context,listen: false).writeData();
-                  var orderRepository = Provider.of<OrderRepository>(context, listen: false);
-                  orderRepository.addItem(itemId: "5555522556", qty: 10);
-                  orderRepository.saveOrder();
+                  ItemRepository().writeData();
+                  Provider.of<ItemRepository>(context,listen: false).writeData();
+                  //var orderRepository = Provider.of<OrderRepository>(context, listen: false);
+                  //orderRepository.addItem(itemId: "5555522556", qty: 10);
+                  //orderRepository.saveOrder();
                   },
 
                 child: const Text('Add')),

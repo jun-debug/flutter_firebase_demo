@@ -22,7 +22,9 @@ class ItemCard extends StatelessWidget {
           children: [
             Container(
               margin: const EdgeInsets.only(right: 8.0),
-              child: Image.network('path_to_your_image.png'), // Replace with your image path
+              width: 100,
+              height: 100,
+              child: Image.network(item.imageUrl??""), // Replace with your image path
             ),
             Expanded(
               child: Column(
@@ -36,7 +38,7 @@ class ItemCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Quantity: $qty',
+                    'Price:\$${item.price}    Quantity: $qty',
                     style: TextStyle(fontSize: 14.0),
                   ),
                 ],

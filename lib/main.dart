@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
               'Home': (context) => const MyHomePage(title: "Hello world"),
               'Register': (context) => const RegisterPage(),
               'ListItem': (context) => const ListItemPage(),
-              'OrderItemList': (context) => const OrderDetailPage(),
+              'OrderItemList': (context) => OrderDetailPage(),
             },
             home: const MyHomePage(title: 'Flutter Demo Home Page'),
           )

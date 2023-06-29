@@ -6,6 +6,9 @@ class CartOrder {
   // Map<String, int> items = {};
   Map<Item, int> items = {};
 
+  String? userId;
+
+
   CartOrder({this.id});
 
 
@@ -24,6 +27,7 @@ class CartOrder {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'userId': userId,
       //'orderItems': items.map((item, quantity) => MapEntry(item.toJson(), quantity)),
       'orderItems': items.map((item, quantity) => MapEntry(item.toJson(), quantity))
           .map((key, value) => MapEntry(key.toString(), value)),
@@ -32,6 +36,7 @@ class CartOrder {
 
   CartOrder.fromJson(Map<String, dynamic> json)
     : id = json['id'],
+      userId = json['userId'],
       items = json['orderItems'].map<Item, int>((itemJson, quantity) =>
           MapEntry(Item.fromJson(itemJson), quantity));
 

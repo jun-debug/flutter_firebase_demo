@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_demo/CheckoutView.dart';
-import 'package:flutter_firebase_demo/ItemListView.dart';
 import 'package:flutter_firebase_demo/OrderItemListView.dart';
 import 'package:flutter_firebase_demo/model/orderRepository.dart';
 import 'package:provider/provider.dart';
@@ -47,13 +46,18 @@ class _OrderDetailState extends State<OrderDetailPage> {
           title: Text('Order detail'),
           actions: [
             IconButton(
+
               icon: const Icon(Icons.payment),
-              onPressed: toggleVisibility,
+              onPressed: () {
+                toggleVisibility();
+                if (cart.count == 0) {
+                  isCheckingOut = false;
+                }
+              },
             ),
             IconButton(
               icon: const Icon(Icons.info),
-              onPressed: () {
-              },
+              onPressed: () {},
             ),
           ],
         ),

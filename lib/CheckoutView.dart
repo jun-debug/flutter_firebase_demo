@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_demo/model/orderRepository.dart';
+import 'package:provider/provider.dart';
 
 class CheckoutView extends StatelessWidget{
   const CheckoutView({super.key});
 
   @override
   Widget build(BuildContext context ) {
-    // TODO: implement build
+    var cart = Provider.of<OrderRepository>(context, listen: false);
     TextEditingController controller = TextEditingController();
     return Container(
       width: double.infinity,
@@ -37,7 +39,10 @@ class CheckoutView extends StatelessWidget{
             ),
             SizedBox(height: 8.0,),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                cart.checkout();
+                Navigator.pop(context);
+                },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

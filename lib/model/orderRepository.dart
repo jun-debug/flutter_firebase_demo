@@ -22,7 +22,7 @@ class OrderRepository extends ChangeNotifier {
   Future<List<CartOrder>> getAllOrders() async {
     var results = await db.collection(DocumentName).get();
     List<CartOrder> orders = [];
-    for(var doc in results.docs){
+    for (var doc in results.docs) {
       var order = CartOrder.fromJson(doc.data());
       orders.add(order);
     }
@@ -30,29 +30,30 @@ class OrderRepository extends ChangeNotifier {
   }
 
 
-
-  void addItem({required Item item, required int qty}){
-     if (currentOrder != null){
-       currentOrder.items[item] = qty;
-     }
-     notifyListeners();
+  void addItem({required Item item, required int qty}) {
+    if (currentOrder != null) {
+      currentOrder.items[item] = qty;
+    }
+    notifyListeners();
   }
 
   // void deleteItem({required String itemId}){
   //   currentOrder.items.remove(itemId);
   // }
 
-  void deleteItem({required Item item}){
+  void deleteItem({required Item item}) {
     currentOrder.items.remove(item);
     notifyListeners();
   }
 
-  void updateItemQty({required Item item, required int qty}){
+  void updateItemQty({required Item item, required int qty}) {
     currentOrder.items[item] = qty;
   }
 
   Future<Item?> getItem({required String itemId}) async {
-    var item = await db.collection(ItemRepository.DocumentName).doc(itemId).get();
+    var item = await db.collection(ItemRepository.DocumentName)
+        .doc(itemId)
+        .get();
     if (item.data() != null) {
       return Item.fromJson(item.data());
     }
@@ -65,7 +66,7 @@ class OrderRepository extends ChangeNotifier {
     Map<Item, int> orderItems = {};
     try {
       if (currentOrder != null) {
-         for(var element in currentOrder.items.entries){
+        for (var element in currentOrder.items.entries) {
           Item? item = await getItem(itemId: element.key.id!);
           if (item != null) {
             orderItems[item] = element.value;
@@ -83,12 +84,15 @@ class OrderRepository extends ChangeNotifier {
   Future<CartOrder> getOrder(String? orderId) async {
     if (orderId != null) {
       var existingOrder = await db.collection(DocumentName).doc(orderId).get();
-      if (existingOrder.data() != null){
+      if (existingOrder.data() != null) {
         notifyListeners();
         return CartOrder.fromJson(existingOrder.data());
       }
     }
-    var newId = db.collection(DocumentName).doc().id;
+    var newId = db
+        .collection(DocumentName)
+        .doc()
+        .id;
     notifyListeners();
     return CartOrder(id: newId);
   }
@@ -97,9 +101,10 @@ class OrderRepository extends ChangeNotifier {
     try {
       db ??= FirebaseFirestore.instance;
       String orderId = currentOrder.id ??
-          db.collection(DocumentName)
-          .doc()
-          .id;
+          db
+              .collection(DocumentName)
+              .doc()
+              .id;
       currentOrder.id = orderId;
       db.collection(DocumentName).doc(currentOrder.id).set(
           currentOrder.toJson());
@@ -108,4 +113,12 @@ class OrderRepository extends ChangeNotifier {
       print("$e");
     }
   }
+
+  void checkout() async {
+    saveOrder();
+    currentOrder.items.clear();
+    currentOrder.id = null;
+    notifyListeners();
+  }
+
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_demo/ItemListView.dart';
+import 'package:flutter_firebase_demo/OrderDetailPage.dart';
 import 'package:flutter_firebase_demo/model/ItemRepository.dart';
 import 'package:flutter_firebase_demo/model/orderRepository.dart';
 import 'package:provider/provider.dart';
@@ -41,9 +42,15 @@ class ListItemPage extends StatelessWidget {
                     semanticLabel: 'Shopping cart',
                   ),
                   onPressed: () {
-                    if (!cart.currentOrder.items.isEmpty) {
-                      cart.saveOrder();
-                      Navigator.pushNamed(context, 'OrderItemList');
+                    if (cart.currentOrder.items.isNotEmpty) {
+                      //cart.saveOrder();
+                      //Navigator.pushNamed(context, 'OrderItemList');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderDetailPage(),
+                        ),
+                      );
                     }
                   },
                 ),
